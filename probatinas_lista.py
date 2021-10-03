@@ -10,7 +10,7 @@ lista_slugs = []
 lista_symbols = []
 lista_name = []
 
-monedas_ids = {}
+#,BTC,ETH,XRP,LTC,BCH,BNB,USDT,EOS,BSV,XLM,ADA,TRX
 
 url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/map'
 parameters = {
@@ -31,11 +31,13 @@ session.headers.update(headers)
 try:
     response = session.get(url, params=parameters)
     data = json.loads(response.text)
-
-    for i in range(12):
-        monedas_ids[data['data'][i]['name']] = data['data'][i]['id']
-
+    pprint.pprint(data['data'][0]['id'])
+    #lista_id.append(data['platform']['id'])
+#
+    #pprint.pprint(data['platform']['name'])
+    #lista_name.append(data['platform']['name'])
+#
+    #pprint.pprint(data['platform']['symbol'])
+    #lista_symbols.append(data['platform']['symbol'])
 except (ConnectionError, Timeout, TooManyRedirects) as e:
     pprint.pprint(e)
-
-pprint.pprint(monedas_ids)
