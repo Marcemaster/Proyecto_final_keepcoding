@@ -1,0 +1,1 @@
+API_KEY = "<Inserte aquí si API KEY de Coinmarketcap>"
