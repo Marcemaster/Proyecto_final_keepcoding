@@ -6,86 +6,81 @@
 {% block contenido_pagina %}
     <h1>Lista de movimientos</h1>
         <table class="paper">
+            <thead>
                 <tr>
-                    <th >Fecha</th>
-                    <th >Hora</th>
-                    <th >Origen</th>
-                    <th >Cantidad</th>
-                    <th >Moneda</th>
-                    <th >Cantidad</th>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Origen</th>
+                    <th>Cantidad</th>
+                    <th>Moneda</th>
+                    <th>Cantidad</th>
                </tr>
-                {% for item in items %}
-                <tr>
-                    <td>{{ item.date }}</td>
-                    <td>{{ item.time }}</td>
-                    <td>{{ item.moneda_from }}</td>
-                    <td>{{ item.cantidad_from }}</td>
-                    <td>{{ item.moneda_to }}</td>
-                    <td>{{ item.cantidad_to }}</td>
-                </tr>
-                {% endfor %}
+            </thead>
+            <tbody id="tabla-datos">
+                <!-- aquí van a ir los datos desde JS-->
+            </tbody>
         </table>
         
-    <form id="formulario-movimiento" action="">
-    <div class="campo-formulario" id="moneda_from">
-        <label for="from">From:</label>
-        <select name="moneda_from">
-            <option value="UR">UR</option>
-            <option value="BTC">BTC</option>
-            <option value="ETH">ETH</option>
-            <option value="XRP">XRP</option>
-            <option value="LTC">LTC</option>
-            <option value="BCH">BCH</option>
-            <option value="BNB">BNB</option>
-            <option value="USDT">USDT</option>
-            <option value="EOS">EOS</option>
-            <option value="BSV">BSV</option>
-            <option value="XLM">XLM</option>
-            <option value="ADA">ADA</option>
-            <option value="TRX">TRX</option>
-        </select>
-    </div>
-    <div class="campo-formulario" id="moneda_to">
-        <label for="to">To:</label>
-        <select name="moneda_to">
-            <option value="UR">UR</option>
-            <option value="BTC">BTC</option>
-            <option value="ETH">ETH</option>
-            <option value="XRP">XRP</option>
-            <option value="LTC">LTC</option>
-            <option value="BCH">BCH</option>
-            <option value="BNB">BNB</option>
-            <option value="USDT">USDT</option>
-            <option value="EOS">EOS</option>
-            <option value="BSV">BSV</option>
-            <option value="XLM">XLM</option>
-            <option value="ADA">ADA</option>
-            <option value="TRX">TRX</option>
-        </select> 
-    </div>
-    <div class="campo-formulario" id="cantidad_from">
-        <label for="cantidad">Q:</label>
-        <input type="number">
-        <button type="button" class="btn">
-            <span class="button__icon">
-                <ion-icon name="calculator-outline"></ion-icon>
-            </span>
-        </button>
-        <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
-        
-    </div>
-    <div class="campo-formulario" id="cantidad_to">
-        <label for="cantidad">Q: </label>
-        <input type="number" name="cantidad_to" id="cantidad_to" disabled>
-    </div>
-    <div class="campo-formulario" id="precio_unitario">
-        <label for="precio_unitario">P.U.: </label>
-        <input type="number" name="precio_unitario" id="precio_unitario" disabled>
-    </div>
+    <form id="formulario-movimiento" action="/" method="GET">
+        <div class="campo-formulario" id="moneda_from">
+            <label for="from">From:</label>
+            <select name="moneda_from" id="moneda_from">
+                <option value="UR">UR</option>
+                <option value="BTC">BTC</option>
+                <option value="ETH">ETH</option>
+                <option value="XRP">XRP</option>
+                <option value="LTC">LTC</option>
+                <option value="BCH">BCH</option>
+                <option value="BNB">BNB</option>
+                <option value="USDT">USDT</option>
+                <option value="EOS">EOS</option>
+                <option value="BSV">BSV</option>
+                <option value="XLM">XLM</option>
+                <option value="ADA">ADA</option>
+                <option value="TRX">TRX</option>
+            </select>
+        </div>
+        <div class="campo-formulario" id="moneda_to">
+            <label for="moneda_to">To:</label>
+            <select name="moneda_to" id="moneda_to">
+                <option value="UR">UR</option>
+                <option value="BTC">BTC</option>
+                <option value="ETH">ETH</option>
+                <option value="XRP">XRP</option>
+                <option value="LTC">LTC</option>
+                <option value="BCH">BCH</option>
+                <option value="BNB">BNB</option>
+                <option value="USDT">USDT</option>
+                <option value="EOS">EOS</option>
+                <option value="BSV">BSV</option>
+                <option value="XLM">XLM</option>
+                <option value="ADA">ADA</option>
+                <option value="TRX">TRX</option>
+            </select> 
+        </div>
+        <div class="campo-formulario" id="cantidad_from">
+            <label for="cantidad_from">Q:</label>
+            <input type="number" id="cantidad_from">
+            <button type="button" class="btn" id="calcular">
+                <span class="button__icon">
+                    <ion-icon name="calculator-outline"></ion-icon>
+                </span>
+            </button>
+            <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
+            
+        </div>
+        <div class="campo-formulario" id="cantidad_to">
+            <label for="cantidad">Q: </label>
+            <input type="number" name="cantidad_to" id="cantidad_to" disabled>
+        </div>
+        <div class="campo-formulario" id="precio_unitario">
+            <label for="precio_unitario">P.U.: </label>
+            <input type="number" name="precio_unitario" id="precio_unitario" disabled>
+        </div>
 
-    <div class="campo-formulario" id="boton_aceptar">
-        <input id="btn-enviar" name="submit" type="submit" value="Aceptar">
-    </div>
+        <div class="campo-formulario" id="boton_aceptar">
+            <input id="btn-enviar" name="submit" type="submit" value="Aceptar">
+        </div>
     </form>
 
     

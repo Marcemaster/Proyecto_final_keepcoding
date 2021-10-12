@@ -1,5 +1,5 @@
 from programa import app
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, jsonify
 from programa.models import DBManager
 from datetime import date
 
