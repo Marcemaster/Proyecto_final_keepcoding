@@ -3,6 +3,10 @@
     padding: 2rem;
 }
 
+#formulario-movimiento.inactivo {
+    display: none;
+}
+
 .campo-formulario {
     color: rgb(158, 149, 149);
 }    

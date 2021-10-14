@@ -6,7 +6,6 @@ from datetime import date
 
 dbmanager = DBManager("data/movimientos.db")
 
-
 @app.route("/")
 def inicio():
 
@@ -36,6 +35,7 @@ def lista_movimientos():
 
 @app.route("/api/v1/movimiento", methods=["POST"])
 def modifica_movimiento():
+    
     consulta = '''INSERT INTO 
                 movimientos 
                 (date, time, moneda_from, cantidad_from, moneda_to, cantidad_to) 
@@ -43,5 +43,4 @@ def modifica_movimiento():
                 (:date, :time, :moneda_from, :cantidad_from, :moneda_to, :cantidad_to)'''
 
     dbManager.modificaSQL(consulta, request.json)
-
     return jsonify({"status": "success"})
