@@ -42,5 +42,11 @@ def modifica_movimiento():
                 values 
                 (:date, :time, :moneda_from, :cantidad_from, :moneda_to, :cantidad_to)'''
 
-    dbManager.modificaSQL(consulta, request.json)
+    dbmanager.modificaSQL(consulta, request.json)
     return jsonify({"status": "success"})
+
+
+    # Esto es una probatina a ver qué tal sale
+
+    #@app.route("/api/v1/movimiento", methods=["GET","POST"])
+    #pass

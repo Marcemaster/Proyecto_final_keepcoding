@@ -2,7 +2,6 @@
 
 {% block titulo_pagina %} Inicio {% endblock %}
 
-
 {% block contenido_pagina %}
     <h1>Lista de movimientos</h1>
         <article>
@@ -28,57 +27,53 @@
                 <div class="campo-formulario" id="moneda_from">
                     <label for="from">From:</label>
                     <select name="moneda_from" id="moneda_from">
-                        <option value="UR">UR</option>
-                        <option value="BTC">BTC</option>
-                        <option value="ETH">ETH</option>
-                        <option value="XRP">XRP</option>
-                        <option value="LTC">LTC</option>
-                        <option value="BCH">BCH</option>
-                        <option value="BNB">BNB</option>
-                        <option value="USDT">USDT</option>
-                        <option value="EOS">EOS</option>
-                        <option value="BSV">BSV</option>
-                        <option value="XLM">XLM</option>
-                        <option value="ADA">ADA</option>
-                        <option value="TRX">TRX</option>
+                        <option id="EUR" value="EUR">EUR</option>
+                        <option id="BTC" value="BTC">BTC</option>
+                        <option id="ETH" value="ETH">ETH</option>
+                        <option id="XRP" value="XRP">XRP</option>
+                        <option id="LTC" value="LTC">LTC</option>
+                        <option id="BCH" value="BCH">BCH</option>
+                        <option id="BNB" value="BNB">BNB</option>
+                        <option id="USDT" value="USDT">USDT</option>
+                        <option id="EOS" value="EOS">EOS</option>
+                        <option id="BSV" value="BSV">BSV</option>
+                        <option id="XLM" value="XLM">XLM</option>
+                        <option id="ADA" value="ADA">ADA</option>
+                        <option id="TRX" value="TRX">TRX</option>
                     </select>
                 </div>
                 <div class="campo-formulario" id="moneda_to">
                     <label for="moneda_to">To:</label>
                     <select name="moneda_to" id="moneda_to">
-                        <option value="UR">UR</option>
-                        <option value="BTC">BTC</option>
-                        <option value="ETH">ETH</option>
-                        <option value="XRP">XRP</option>
-                        <option value="LTC">LTC</option>
-                        <option value="BCH">BCH</option>
-                        <option value="BNB">BNB</option>
-                        <option value="USDT">USDT</option>
-                        <option value="EOS">EOS</option>
-                        <option value="BSV">BSV</option>
-                        <option value="XLM">XLM</option>
-                        <option value="ADA">ADA</option>
-                        <option value="TRX">TRX</option>
+                        <option id="EUR" value="EUR">EUR</option>
+                        <option id="BTC" value="BTC">BTC</option>
+                        <option id="ETH" value="ETH">ETH</option>
+                        <option id="XRP" value="XRP">XRP</option>
+                        <option id="LTC" value="LTC">LTC</option>
+                        <option id="BCH" value="BCH">BCH</option>
+                        <option id="BNB" value="BNB">BNB</option>
+                        <option id="USDT" value="USDT">USDT</option>
+                        <option id="EOS" value="EOS">EOS</option>
+                        <option id="BSV" value="BSV">BSV</option>
+                        <option id="XLM" value="XLM">XLM</option>
+                        <option id="ADA" value="ADA">ADA</option>
+                        <option id="TRX" value="TRX">TRX</option>
                     </select> 
                 </div>
                 <div class="campo-formulario" id="cantidad_from">
                     <label for="cantidad_from">Q:</label>
-                    <input type="number" id="cantidad_from">
-                    <button type="button" class="btn" id="calcular">
-                        <span class="button__icon">
-                            <ion-icon name="calculator-outline"></ion-icon>
-                        </span>
-                    </button>
-                    <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
-                    
+                    <input type="text" id="cantidad_from">
+                </div>
+                <div>
+                    <button type="button" class="btn-calcular" id="btn-calcular">Calcular</button>
                 </div>
                 <div class="campo-formulario" id="cantidad_to">
                     <label for="cantidad">Q: </label>
-                    <input type="number" name="cantidad_to" id="cantidad_to" disabled>
+                    <input type="text" name="cantidad_to" id="cantidad_to" disabled>
                 </div>
                 <div class="campo-formulario" id="precio_unitario">
                     <label for="precio_unitario">P.U.: </label>
-                    <input type="number" name="precio_unitario" id="precio_unitario" disabled>
+                    <input type="text" name="precio_unitario" id="precio_unitario" disabled>
                 </div>
 
                 <div class="campo-formulario" id="boton_aceptar">
@@ -86,6 +81,19 @@
                 </div>
             </form>
         </article>
-
+        <article>
+            <div>
+                <label for="invertido">Invertido: </label>
+                <p class="dinero-invertido" id="dinero-invertido">€</p>
+            </div>
+            <div>
+                <label for="valor">Valor: </label>
+                <p class="valor-total" id="valor-total">€</p>
+            </div>
+            <div>
+                <label for="resultado">Resultado: </label>
+                <p class="resultado" id="resultado">€</p>
+            </div>
+        </article>
     
 {% endblock %}
