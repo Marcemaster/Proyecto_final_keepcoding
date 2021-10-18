@@ -9,7 +9,13 @@ from config import DATABASE, API_KEY
 
 # consultaapi = consult
 dbmanager = DBManager("data/movimientos.db")
-url = 'https://pro-api.coinmarketcap.com/v1/tools/price-conversion?amount=1&symbol={}&convert={}&CMC_PRO_API_KEY={}'
+
+url = 'https://rest.coinapi.io/v1/exchangerate/{}/{}'
+consulta_api = consultaApi(url)
+
+url_status = 'https://rest.coinapi.io/v1/assets/{}'
+consulta_estado_api = consultaApi(url_status)
+
 
 
 @app.route("/")
@@ -154,41 +160,36 @@ def status_inversion():
         monedas = "EUR,"
 
         for moneda in criptos:
-            monedas += f"{moneda}"
-
+            monedas += f"{moneda},"
         
+        valores_dolares = consulta_estado_api.consulta_status(monedas)
 
+        total_dolares = 0
+        for moneda in criptos:
+            balance = comprobar_balance(moneda)
+            total_dolares_moneda = balance * valores_dolares[f"{moneda}"]
+            total_dolares += total_dolares_moneda
 
+        total = total_dolares / total_dolares_moneda["EUR"]
 
+        consulta_balance = '''SELECT SUM
+                            (cantidad_from) FROM movimientos
+                            WHERE moneda_from = "EUR";'''
 
+        inversion = dbmanager.consultaBalanceSQL(consulta_balance)
 
+        resultado = total - inversion
 
+        respuesta = {
+            "status":"success",
+            "data": {"inversion": inversion, "total": total, "resultado":resultado,}
+        }
+        return jsonify(respuesta), 200
 
-
-
-
-def calcular_tasa_cambio():
-    url = 'https://pro-api.coinmarketcap.com/v1/tools/price-conversion'
-
-    parameters = {
-        'amount': cantidad_from,
-        'symbol': moneda_from,
-        'convert': moneda_to
-    }
-    headers = {
-        'Accepts': 'application/json',
-        'X-CMC_PRO_API_KEY': API_KEY,
-    }
-
-    session = Session()
-    session.headers.update(headers)
-
-    try:
-        response = session.get(url, params=parameters)
-        data = json.loads(response.text)
-
-        precio_cambio = data['data']['quote'][moneda_to]['price']
-        return precio_cambio
-
-    except (ConnectionError, Timeout, TooManyRedirects) as e:
-        pprint.pprint(e)
+    except Exception as error:
+        error = {
+            "status": "fail",
+            "message": str(error)
+        }
+        return jsonify(error), 400
+        

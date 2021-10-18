@@ -1,9 +1,22 @@
 const listaMovimientosRequest = new XMLHttpRequest()
 const cambiaMovimientosRequest = new XMLHttpRequest()
-const calculaTasaRequest = new XMLHttpRequest()
+const calcularBalanceRequest = new XMLHttpRequest()
+const statusBalanceRequest = new XMLHttpRequest()
 
 const root_host = "http://127.0.0.1:5000/api/v1/"
-const coinMarket_host = ""
+
+function  mensajes_error(response, error) {
+    const errorDiv = document.getElementById("mensaje-error");
+    const errorHTML = `<p>${error}: ${response.message}</p>`;
+    errorDiv.innerHTML = errorHTML;
+}
+
+function requestAltaMovimiento() {
+    if (this.readyState === 4 && this.status === 200) {
+        const formulario = document.querySelector("#formulario");
+        const url = `${root_host}movimientos`
+    }
+}
 
 
 function calculaTasa() {
