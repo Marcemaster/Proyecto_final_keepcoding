@@ -37,8 +37,6 @@ class DBManager():
         cur.execute(consulta, params)
         conexion.commit()
         conexion.close()
-
-# TODO PENDIENTE DE REVISAR ESTA FUNCIÓN
  
     def consultaBalanceSQL(self, consulta, params):
         conexion = sqlite3.connect(self.ruta_basetdatos)

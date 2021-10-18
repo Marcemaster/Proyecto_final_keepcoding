@@ -44,21 +44,45 @@ def movimiento(id):
                                 FROM movimientos
                                 WHERE id = ?;'''
 
-        movimiento = dbmanager.consultaSQL(consulta_movimiento)
+        movimiento = dbmanager.consultaSQL(consulta_movimiento, [id])
 
+        if len(movimiento) == 0:
+            error = {
+            "status": "fail",
+            "message": "Movimiento no encontrado"
+            }
+            return jsonify(error), 400
+        
+        return jsonify(movimiento)  
+
+    except Exception as error:
+        error = {
+            "status": "fail",
+            "message": str(error)
+            }
+        return jsonify(error), 400
 
 
 @app.route("/api/v1/movimiento", methods=["POST"])
-def modifica_movimiento():
-    
-    consulta = '''INSERT INTO 
-                movimientos 
-                (date, time, moneda_from, cantidad_from, moneda_to, cantidad_to) 
-                values 
-                (:date, :time, :moneda_from, :cantidad_from, :moneda_to, :cantidad_to)'''
+def nuevo_movimiento():
 
-    dbmanager.modificaSQL(consulta, request.json)
-    return jsonify({"status": "success"})
+    try:
+        consulta = '''INSERT INTO 
+                    movimientos 
+                    (date, time, moneda_from, cantidad_from, moneda_to, cantidad_to) 
+                    values 
+                    (:date, :time, :moneda_from, :cantidad_from, :moneda_to, :cantidad_to)
+                    '''
+
+        dbmanager.modificaSQL(consulta, request.json)
+        return jsonify({"status": "success"})
+
+    except Exception as error:
+        error = {
+            "status": "fail",
+            "message": str(error)
+            }
+        return jsonify(error), 400
 
 def calcular_tasa_cambio():
     url = 'https://pro-api.coinmarketcap.com/v1/tools/price-conversion'
