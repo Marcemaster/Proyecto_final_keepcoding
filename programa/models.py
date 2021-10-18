@@ -49,6 +49,17 @@ class DBManager():
         conexion.close()
         return total_sum
 
+    def obtenerMonedas(self, consulta, params = []):
+
+        movimientos = self.querySQL(consulta)
+    
+        monedas = []
+        for mov in movimientos:
+            if mov["moneda_from"] not in monedas and mov["moneda_from"] != "EUR":
+                monedas.append(mov["moneda_from"])
+            if mov["currency_to"] not in monedas and mov["moneda_to"] != "EUR":
+                monedas.append(mov["moneda_to"])
+        return monedas
 
 class consultaApi():
     def __init__(self, url, params = []):
@@ -63,7 +74,7 @@ class consultaApi():
         return request.json()["price"]
 
     def consulta_status(self, params):
-        headers = {'X-CMC_PRO_API_KEY': API_KEY}
+        headers = {'X-CoinAPI-Key': API_KEY}
         self.params = params
 
         request = request.get((self.url).format(self.params), headers = headers)
