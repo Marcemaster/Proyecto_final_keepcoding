@@ -1,12 +1,12 @@
 from programa import app
 from flask import render_template, request, redirect, url_for, flash, jsonify
-from programa.models import DBManager, consultaApiExterna
+from programa.models import DBManager, consultaApi
 from datetime import date
-from config import
+from config import DATABASE, API_KEY
 
+consultaapi = consult
 dbmanager = DBManager("data/movimientos.db")
 url = 'https://pro-api.coinmarketcap.com/v1/tools/price-conversion?amount=1&symbol={}&convert={}&CMC_PRO_API_KEY={}'
-
 
 
 @app.route("/")
@@ -34,6 +34,18 @@ def lista_movimientos():
     }
 
     return jsonify(resultados)
+
+# Creando la nueva ruta para el ID del movimiento
+
+@app.route("/api/v1/movimiento/<int:id>", methods=["GET"])
+def movimiento(id):
+    try:
+        consulta_movimiento = '''SELECT id, date, time, moneda_from, cantidad_from, moneda_to, cantidad_to
+                                FROM movimientos
+                                WHERE id = ?;'''
+
+        movimiento = dbmanager.consultaSQL(consulta_movimiento)
+
 
 
 @app.route("/api/v1/movimiento", methods=["POST"])

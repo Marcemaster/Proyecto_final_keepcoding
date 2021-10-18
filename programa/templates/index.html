@@ -4,7 +4,7 @@
 
 {% block contenido_pagina %}
     <h1>Lista de movimientos</h1>
-        <article>
+        <article id="tabla-registros">
             <button id="btn-nuevo">Nuevo</button>
             <table class="paper">
                 <thead>
@@ -15,17 +15,17 @@
                         <th>Cantidad</th>
                         <th>Moneda</th>
                         <th>Cantidad</th>
-                </tr>
+                    </tr>
                 </thead>
                 <tbody id="tabla-datos">
                     <!-- aquí van a ir los datos desde JS-->
                 </tbody>
-            </table>
         </article>
-        <article>
+        </table>
+        <article id="formulario">
             <form class="inactivo" id="formulario-movimiento" method="POST">
                 <div class="campo-formulario" id="moneda_from">
-                    <label for="from">From:</label>
+                    <label for="moneda_from">From:</label>
                     <select name="moneda_from" id="moneda_from">
                         <option id="EUR" value="EUR">EUR</option>
                         <option id="BTC" value="BTC">BTC</option>
@@ -68,7 +68,7 @@
                     <button type="submit" class="btn-calcular" id="btn-calcular">Calcular</button>
                 </div>
                 <div class="campo-formulario" id="cantidad_to">
-                    <label for="cantidad">Q: </label>
+                    <label for="cantidad_to">Q: </label>
                     <input type="text" name="cantidad_to" id="cantidad_to" disabled>
                 </div>
                 <div class="campo-formulario" id="precio_unitario">
@@ -82,13 +82,13 @@
                 <div id="mensaje-error"></div>
             </form>
         </article>
-        <article>
+        <article id="balance-resultados">
             <div>
-                <label for="invertido">Invertido: </label>
+                <label for="dinero-invertido">Invertido: </label>
                 <p class="dinero-invertido" id="dinero-invertido">€</p>
             </div>
             <div>
-                <label for="valor">Valor: </label>
+                <label for="valor-total">Valor: </label>
                 <p class="valor-total" id="valor-total">€</p>
             </div>
             <div>

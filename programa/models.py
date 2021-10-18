@@ -2,6 +2,7 @@ import sqlite3
 import requests
 from config import API_KEY
 
+# Estas funciones son las que actualizan la BBDD y consultan a la API, trabajan en el backend y se conectan a través del fichero views.py
 
 class DBManager():
     def __init__(self, ruta_basedatos):
@@ -37,7 +38,8 @@ class DBManager():
         conexion.commit()
         conexion.close()
 
-# PENDIENTE DE REVISAR ESTA FUNCIÓN
+# TODO PENDIENTE DE REVISAR ESTA FUNCIÓN
+ 
     def consultaBalanceSQL(self, consulta, params):
         conexion = sqlite3.connect(self.ruta_basetdatos)
 
@@ -49,9 +51,8 @@ class DBManager():
         conexion.close()
         return total_sum
 
-# Consulta api externa
 
-class consultaApiExterna():
+class consultaApi():
     def __init__(self, url, params = []):
         self.url = url
 
@@ -74,10 +75,10 @@ class consultaApiExterna():
         for moneda in diccionario_valores_USD:
             # HAY QUE REPASAR LA LINEA 76
             diccionario_valores.update({moneda['asset_id']:moneda['price_usd']})
-            
+
         return diccionario_valores
 
-
+# TODO pendiente borrar esta función.
 def obtenerCantidad_to(moneda_from,cantidad_from, moneda_to):
 
   url = 'https://pro-api.coinmarketcap.com/v1/tools/price-conversion'
