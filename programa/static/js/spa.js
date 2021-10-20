@@ -1,9 +1,9 @@
-const listaMovimientosRequest = new XMLHttpRequest()
-const cambiaMovimientosRequest = new XMLHttpRequest()
-const calcularBalanceRequest = new XMLHttpRequest()
-const statusBalanceRequest = new XMLHttpRequest()
+const listaMovimientosRequest = new XMLHttpRequest();
+const cambiaMovimientosRequest = new XMLHttpRequest();
+const calcularBalanceRequest = new XMLHttpRequest();
+const statusBalanceRequest = new XMLHttpRequest();
 
-const root_host = "http://127.0.0.1:5000/api/v1/"
+const root_host = "http://127.0.0.1:5000/api/v1/";
 
 function  mensajes_error(response, error) {
     const errorDiv = document.getElementById("mensaje-error");
@@ -14,10 +14,47 @@ function  mensajes_error(response, error) {
 function requestAltaMovimiento() {
     if (this.readyState === 4 && this.status === 200) {
         const formulario = document.querySelector("#formulario");
-        const url = `${root_host}movimientos`
+        
+        const url = `${root_host}movimientos`;
+        listaMovimientosRequest.open("GET", url, true);
+        listaMovimientosRequest.onload = cargaMovimientos;
+        listaMovimientosRequest.send();
+    } else {
+        const response = JSON.parse(this.responseText);
+        mensajes_error(response, "Error al acceder a la base de datos")
     }
 }
 
+
+function cargaMovimientos() {
+    const response = JSON.parse(this.responseText)
+
+    if (this.readyState === 4 && this.status === 200) {
+        const movimientos = response.movimientos;
+        if (movimientos.length != 0) {
+
+            const tabla = document.querySelector("#tabla-datos")
+            let innerHTML = ""
+            for (let i=0; i < movimientos.length; i++) {
+            innerHTML = innerHTML +
+            `<tr>
+                <td>${movimientos[i].date}</td>
+                <td>${movimientos[i].time}</td>
+                <td>${movimientos[i].moneda_from}</td>
+                <td>${movimientos[i].cantidad_from}</td>
+                <td>${movimientos[i].moneda_to}</td>
+                <td>${movimientos[i].cantidad_to}</td>
+            </tr>`
+            }
+            tabla.innerHTML = innerHTML
+        } else {
+            const sin_movimientos = document.querySelector("#sin-movimientos");
+
+            const mensaje_mov = `<p>Aquí aparecerán los movimientos. Realice la primera compra</p>`;
+            mensaje_mov.innerHTML = mensaje_mov
+        }
+    }
+}
 
 function calculaTasa() {
     const mensaje_error = document.querySelector("#mensaje-error");
@@ -55,28 +92,7 @@ function respuestaTasa() {
 }
 
 
-function muestraMovimientos() {
-    if (this.readyState === 4 && this.status === 200) {
-        const respuesta = JSON.parse(this.responseText)
-        const movimientos = respuesta.movimientos
-        const tabla = document.querySelector("#tabla-datos")
-        let innerHTML = ""
-        for (let i=0; i < movimientos.length; i++) {
-        innerHTML = innerHTML +
-        `<tr>
-            <td>${movimientos[i].date}</td>
-            <td>${movimientos[i].time}</td>
-            <td>${movimientos[i].moneda_from}</td>
-            <td>${movimientos[i].cantidad_from}</td>
-            <td>${movimientos[i].moneda_to}</td>
-            <td>${movimientos[i].cantidad_to}</td>
-        </tr>`
-        }
-        tabla.innerHTML = innerHTML
-    } else {
-        alert("Se ha producido un error en la consulta de movimientos")
-    }
-}
+
 
 function hazVisibleForm(ev) {
     ev.preventDefault()
