@@ -25,7 +25,6 @@ function requestAltaMovimiento() {
     }
 }
 
-
 function cargaMovimientos() {
     const response = JSON.parse(this.responseText)
 
@@ -63,13 +62,27 @@ function calculaTasa() {
     const response = JSON.parse(this.responseText);
 
     if (this.readyState === 4 && this.status === 201) {
-        const cantidad_to = document.querySelector("#cantidad_to");
+        const cantidad_to = document.getElementById("cantidad_to");
         cantidad_to.value = response["cantidad_to"]
+
+        const precio_unitario = document.getElementById("precio_unitario")
+        precio_unitario.value = response["precio_unitario"]
+
+        // Evitamos que se pueda alterar el formulario después de calcular la tasa.
+
+        const moneda_from = document.getElementById("moneda_from");
+        moneda_from.setAttribute("disabled", true);
+        const cantidad_from = document.getElementById("cantidad_from");
+        cantidad_from.setAttribute("disabled", true);
+        const moneda_to = document.getElementById("moneda_to");
+        moneda_to.setAttribute("disabled", true);
+
     } else {
-        mensaje_error(respones, "Error en la Request a la API")
+        mensaje_error(response, "Error en la Request a la API")
     }
+}
 
-
+// No borrar todavía. Revisar después
     ev.preventDefault()
 
     const moneda_from = document.querySelector("#moneda_from").value
@@ -86,6 +99,11 @@ function calculaTasa() {
     cambiaMovimientosRequest.send(JSON.stringify(json_calcular))
 
 }
+
+
+
+
+
 
 function respuestaTasa() {
 
