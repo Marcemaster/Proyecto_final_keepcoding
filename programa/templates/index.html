@@ -1,101 +1,113 @@
-{% extends 'base.html' %}
-
-{% block titulo_pagina %} Inicio {% endblock %}
-
-{% block contenido_pagina %}
-    <h1>Lista de movimientos</h1>
-        <article id="tabla-registros">
-            <button id="btn-nuevo">Nuevo</button>
-            <div id="sin-movimientos"></div>
-            <table class="paper">
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Hora</th>
-                        <th>Origen</th>
-                        <th>Cantidad</th>
-                        <th>Moneda</th>
-                        <th>Cantidad</th>
-                    </tr>
-                </thead>
-                <tbody id="tabla-datos">
-                    <!-- aquí van a ir los datos desde JS-->
-                </tbody>
-        </article>
-        </table>
-        <article id="formulario">
-            <form class="inactivo" id="formulario-movimiento" method="POST">
-                <div class="campo-formulario">
-                    <label for="moneda_from">From:</label>
-                    <select name="moneda_from" id="moneda_from">
-                        <option id="EUR" value="EUR">EUR</option>
-                        <option id="BTC" value="BTC">BTC</option>
-                        <option id="ETH" value="ETH">ETH</option>
-                        <option id="XRP" value="XRP">XRP</option>
-                        <option id="LTC" value="LTC">LTC</option>
-                        <option id="BCH" value="BCH">BCH</option>
-                        <option id="BNB" value="BNB">BNB</option>
-                        <option id="USDT" value="USDT">USDT</option>
-                        <option id="EOS" value="EOS">EOS</option>
-                        <option id="BSV" value="BSV">BSV</option>
-                        <option id="XLM" value="XLM">XLM</option>
-                        <option id="ADA" value="ADA">ADA</option>
-                        <option id="TRX" value="TRX">TRX</option>
-                    </select>
-                </div>
-                <div class="campo-formulario">
-                    <label for="moneda_to">To:</label>
-                    <select name="moneda_to" id="moneda_to">
-                        <option id="EUR" value="EUR">EUR</option>
-                        <option id="BTC" value="BTC">BTC</option>
-                        <option id="ETH" value="ETH">ETH</option>
-                        <option id="XRP" value="XRP">XRP</option>
-                        <option id="LTC" value="LTC">LTC</option>
-                        <option id="BCH" value="BCH">BCH</option>
-                        <option id="BNB" value="BNB">BNB</option>
-                        <option id="USDT" value="USDT">USDT</option>
-                        <option id="EOS" value="EOS">EOS</option>
-                        <option id="BSV" value="BSV">BSV</option>
-                        <option id="XLM" value="XLM">XLM</option>
-                        <option id="ADA" value="ADA">ADA</option>
-                        <option id="TRX" value="TRX">TRX</option>
-                    </select> 
-                </div>
-                <div class="campo-formulario">
-                    <label for="cantidad_from">Q:</label>
-                    <input type="text" id="cantidad_from">
-                </div>
-                <div>
-                    <button type="submit" class="btn-calcular" id="btn-calcular">Calcular</button>
-                </div>
-                <div class="campo-formulario">
-                    <label for="cantidad_to">Q: </label>
-                    <input type="text" name="cantidad_to" id="cantidad_to" disabled>
-                </div>
-                <div class="campo-formulario">
-                    <label for="precio_unitario">P.U.: </label>
-                    <input type="text" name="precio_unitario" id="precio_unitario" disabled>
-                </div>
-
-                <div class="campo-formulario">
-                    <input id="btn-enviar" name="submit" type="submit" value="Aceptar">
-                </div>
-                <div id="mensaje-error"></div>
-            </form>
-        </article>
-        <article id="balance-resultados">
-            <div>
-                <label for="dinero-invertido">Invertido: </label>
-                <p class="dinero-invertido" id="dinero-invertido">€</p>
-            </div>
-            <div>
-                <label for="valor-total">Valor: </label>
-                <p class="valor-total" id="valor-total">€</p>
-            </div>
-            <div>
-                <label for="resultado">Resultado: </label>
-                <p class="resultado" id="resultado">€</p>
-            </div>
-        </article>
-    
-{% endblock %}
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>myCRYPTO | {% block titulo_pagina %} {% endblock %}</title>
+        <link rel="stylesheet" href="/static/css/flat-remix.css">
+        <link rel="stylesheet" href="/static/css/styles.css">
+        <script src="/static/js/spa.js"></script>
+    </head>
+    <body>
+        <header>
+            <p>myCRYPTO</p>
+        </header>
+        <section class="contenedor">
+            <h1>Lista de movimientos</h1>
+            <article id="tabla-registros">
+                <button id="btn-nuevo">Nuevo</button>
+                <div id="sin-movimientos"></div>
+                <table class="paper">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Origen</th>
+                            <th>Cantidad</th>
+                            <th>Moneda</th>
+                            <th>Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-datos">
+                        <!-- aquí van a ir los datos desde JS-->
+                    </tbody>
+            </article>
+            </table>
+            <article id="formulario">
+                <form class="inactivo" id="formulario-movimiento" method="POST">
+                    <div class="campo-formulario">
+                        <label for="moneda_from">From:</label>
+                        <select name="moneda_from" id="moneda_from">
+                            <option id="EUR" value="EUR">EUR</option>
+                            <option id="BTC" value="BTC">BTC</option>
+                            <option id="ETH" value="ETH">ETH</option>
+                            <option id="XRP" value="XRP">XRP</option>
+                            <option id="LTC" value="LTC">LTC</option>
+                            <option id="BCH" value="BCH">BCH</option>
+                            <option id="BNB" value="BNB">BNB</option>
+                            <option id="USDT" value="USDT">USDT</option>
+                            <option id="EOS" value="EOS">EOS</option>
+                            <option id="BSV" value="BSV">BSV</option>
+                            <option id="XLM" value="XLM">XLM</option>
+                            <option id="ADA" value="ADA">ADA</option>
+                            <option id="TRX" value="TRX">TRX</option>
+                        </select>
+                    </div>
+                    <div class="campo-formulario">
+                        <label for="moneda_to">To:</label>
+                        <select name="moneda_to" id="moneda_to">
+                            <option id="BTC" value="BTC">BTC</option>
+                            <option id="EUR" value="EUR">EUR</option>
+                            <option id="ETH" value="ETH">ETH</option>
+                            <option id="XRP" value="XRP">XRP</option>
+                            <option id="LTC" value="LTC">LTC</option>
+                            <option id="BCH" value="BCH">BCH</option>
+                            <option id="BNB" value="BNB">BNB</option>
+                            <option id="USDT" value="USDT">USDT</option>
+                            <option id="EOS" value="EOS">EOS</option>
+                            <option id="BSV" value="BSV">BSV</option>
+                            <option id="XLM" value="XLM">XLM</option>
+                            <option id="ADA" value="ADA">ADA</option>
+                            <option id="TRX" value="TRX">TRX</option>
+                        </select> 
+                    </div>
+                    <div class="campo-formulario">
+                        <label for="cantidad_from">Q:</label>
+                        <input type="text" id="cantidad_from">
+                    </div>
+                    <div>
+                        <button type="submit" class="btn-calcular" id="btn-calcular">Calcular</button>
+                    </div>
+                    <div class="campo-formulario">
+                        <label for="cantidad_to">Q: </label>
+                        <input type="text" name="cantidad_to" id="cantidad_to" disabled>
+                    </div>
+                    <div class="campo-formulario">
+                        <label for="precio_unitario">P.U.: </label>
+                        <input type="text" name="precio_unitario" id="precio_unitario" disabled>
+                    </div>
+                    <div class="campo-formulario">
+                        <input id="btn-enviar" name="submit" type="submit" value="Comprar">
+                    </div>
+                    <div id="mensaje-error"></div>
+                </form>
+            </article>
+            <article class="estado-inversion" id="estado-inversion">
+                <table class="tabla-completa-estado">
+                    <thead class="table-head">
+                        <th>Inversión €</th>
+                        <th>Total €</th>
+                        <th>Resultado €</th>
+                    </thead>
+                    <tbody id="tabla-estado">
+                        <!-- Status a través de js -->
+                    </tbody>
+                </table>
+            </article>
+        </section>
+        <footer>
+            <p>&copy; 2021 - Todos los derechos reservados</p>
+        </footer>
+    </body>
+</html>

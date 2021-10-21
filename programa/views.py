@@ -149,7 +149,7 @@ def request_Api():
         }
         return jsonify(error), 400
 
-
+@app.route("/api/v1/status")
 def status_inversion():
 
     consulta = '''SELECT * 
@@ -192,4 +192,5 @@ def status_inversion():
             "message": str(error)
         }
         return jsonify(error), 400
-        
+    
+

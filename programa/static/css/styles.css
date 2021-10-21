@@ -22,3 +22,7 @@ label {
 
 }
 
+.inactivo {
+    display: none;
+}
+

@@ -1,15 +1,19 @@
 const listaMovimientosRequest = new XMLHttpRequest();
 const cambiaMovimientosRequest = new XMLHttpRequest();
 const calcularBalanceRequest = new XMLHttpRequest();
-const statusBalanceRequest = new XMLHttpRequest();
+const respuestaEstadoRequest = new XMLHttpRequest();
 
 const root_host = "http://127.0.0.1:5000/api/v1/";
+
+// Manejo de errores
 
 function  mensajes_error(response, error) {
     const errorDiv = document.getElementById("mensaje-error");
     const errorHTML = `<p>${error}: ${response.message}</p>`;
     errorDiv.innerHTML = errorHTML;
 }
+
+// Mostrar tablas de movimientos
 
 function requestAltaMovimiento() {
     if (this.readyState === 4 && this.status === 200) {
@@ -55,6 +59,8 @@ function cargaMovimientos() {
     }
 }
 
+// Calcular tasa de cambio
+
 function calculaTasa() {
     const mensaje_error = document.querySelector("#mensaje-error");
     const errorHTML = "";
@@ -82,53 +88,121 @@ function calculaTasa() {
     }
 }
 
-// No borrar todavía. Revisar después
-    ev.preventDefault()
-
-    const moneda_from = document.querySelector("#moneda_from").value
-    const cantidad_from = document.querySelector("#cantidad_from").value
-    const moneda_to = document.querySelector("#moneda_to").value
-
-    json_calcular = {"moneda_from":moneda_from, "cantidad_from":cantidad_from, "moneda_to":moneda_to}
-    console.log(json_calcular)
-    alert(json_calcular)
-
-    cambiaMovimientosRequest.open("POST", "/calcular", true)
-    cambiaMovimientosRequest.setRequestHeader("Content-Type", "application/json")
-    cambiaMovimientosRequest.onload = respuestaAltaMovimiento
-    cambiaMovimientosRequest.send(JSON.stringify(json_calcular))
-
-}
-
-
-
-
-
-
 function respuestaTasa() {
-
 }
 
+// Status 
 
+function cargarEstado() {
+    const response = JSON.parse(this.responseText)
 
+    if (this.readyState === 4 && this.status === 200) {
+        const valores = response.data;
+
+        const tabla_estado = document.getElementById("tabla_estado")
+        const inversionHTML = `<td>${valueStatus["inversion"]}</td>`;
+        const totalHTML = `<td>${valueStatus["total"]}</td>`;
+        const resultadoHTML = `<td>${valueStatus["resultado"]}</td>`;
+        tabla_estado.innerHTML = inversionHTML + totalHTML + resultadoHTML;
+
+        if (valueStatus["resultado"] <= 0) {
+            const tabla_estado = document.getElementById("tabla_estado").getElementsByTagName("td");
+            tabla_estado[2].style.color = "red";
+        }
+    } else {
+        mensajes_error(response, "Error en la request a CoinApi")
+    }
+}
+
+function respuestaEstado() {
+    const url = `${root_host}status`;
+    respuestaEstadoRequest.open("GET", url, true);
+    respuestaEstadoRequest.onload = cargarEstado;
+    respuestaEstadoRequest.send();
+}
+
+// Manejo del formulario 
 
 function hazVisibleForm(ev) {
     ev.preventDefault()
 
     const form = document.querySelector("#formulario-movimiento")
     form.classList.remove("inactivo")
+
+    const aceptar = document.getElementById("btn-enviar")
+    aceptar.classList.add("inactivo")
+
 }
 
-function altaMovimiento(ev) {
-    ev.preventDefault()
+function resetearFormulario() {
+    document.getElementById("moneda_from").value = "EUR";
+    document.getElementById("cantidad_from").value = "";
+    document.getElementById("moneda_to").value = "BTC";
+    document.getElementById("cantidad_to").value = "EUR";
+    document.getElementById("precio_unitario").value = "EUR";
 
-    const date = "17/10/2021"//today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-    const time = "20:29:10" // Date.getHours() + ":" + Date.getMinutes() + ":" + Date.getSeconds();
-    const moneda_from = document.querySelector("#moneda_from").value
-    const cantidad_from = document.querySelector("#cantidad_from").value
-    const moneda_to = document.querySelector("#moneda_to").value
-    const cantidad_to = 100000//calculaTasa // ¿Cómo se conecta esto con la llamada a la API de coinmarketcap? 
-    // Primero hay que rellenar los datos en el form a través de otra función
+    const moneda_from = document.getElementById("moneda_from");
+    moneda_from.removeAttribute("inactivo")
+    const cantidad_from = document.getElementById("cantidad_from");
+    cantidad_from.removeAttribute("inactivo")
+    const moneda_to = document.getElementById("moneda_to");
+    moneda_to.removeAttribute("inactivo")
+    const boton_aceptar = document.querySelector("#btn-enviar");
+    boton_aceptar.classList.remove("inactivo");
+}
+
+
+// Funciones para conseguir la fecha 
+
+function obtener_fecha(date) {
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+}
+
+function obtener_hora(date) {
+    return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+}
+
+
+// Validación de inputs del formulario
+
+function validaInputs(ev) {
+    ev.preventDefault();
+    
+    const moneda_from = document.getElementById("moneda_from")
+    const moneda_to = document.getElementById("moneda_to")
+    const cantidad_from = document.getElementById("cantidad_from")
+    
+    if ( 
+        cantidad_from.value == ""
+        ) {
+            mensajes_error("Por favor, rellena todos los campos");
+        } else if (moneda_from.value == moneda_to.value ) {
+            mensajes_error("Las monedas deben ser distintas");
+        } else {
+            compruebaBalance();
+        } 
+        
+    }
+    
+    
+    function compruebaBalance() {
+        
+        
+    }
+    
+
+    // Nuevos movimientos
+    
+    function altaMovimiento(ev) {
+        ev.preventDefault()
+        
+        const date = "17/10/2021"//today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+        const time = "20:29:10" // Date.getHours() + ":" + Date.getMinutes() + ":" + Date.getSeconds();
+        const moneda_from = document.querySelector("#moneda_from").value
+        const cantidad_from = document.querySelector("#cantidad_from").value
+        const moneda_to = document.querySelector("#moneda_to").value
+        const cantidad_to = 100000//calculaTasa // ¿Cómo se conecta esto con la llamada a la API de coinmarketcap? 
+        // Primero hay que rellenar los datos en el form a través de otra función
 
     json_movimiento = {"date":date, "time":time, "moneda_from":moneda_from, "cantidad_from":cantidad_from, "moneda_to":moneda_to, "cantidad_to":cantidad_to}
 
@@ -152,18 +226,20 @@ function respuestaAltaMovimiento() {
     }
 }
 
-window.onload = function() {
-    const url = `${root_host}movimientos`
-    listaMovimientosRequest.open("GET", url, true)
-    listaMovimientosRequest.onload = muestraMovimientos
-    listaMovimientosRequest.send()
 
+// FINAL Window onload.
+
+window.onload = function() {
+    const url = `${root_host}movimientos`;
+    listaMovimientosRequest.open("GET", url, true);
+    listaMovimientosRequest.onload = cargaMovimientos;
+    listaMovimientosRequest.send();
 
     const btnNuevo = document.querySelector("#btn-nuevo")
     btnNuevo.addEventListener("click", hazVisibleForm)
 
     const btnCalc = document.querySelector("#btn-calcular")
-    btnCalc.addEventListener("click", calculaTasa)
+    btnCalc.addEventListener("click", validaInputs)
 
     const btnEnviar = document.querySelector("#btn-enviar")
     btnEnviar.addEventListener("click", altaMovimiento)
