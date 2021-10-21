@@ -1,13 +1,9 @@
 from programa import app
 from flask import render_template, request, jsonify
 from programa.models import DBManager, consultaApi
-from config import DATABASE, API_KEY
-
-# TODO falta chequear el saldo antes de postear un movimiento
-# TODO falta la vista de status
+from config import DATABASE
 
 
-# consultaapi = consult
 dbmanager = DBManager("data/movimientos.db")
 
 url = 'https://rest.coinapi.io/v1/exchangerate/{}/{}'
@@ -20,13 +16,7 @@ consulta_estado_api = consultaApi(url_status)
 
 @app.route("/")
 def inicio():
-
-    consulta = '''SELECT *
-                 FROM movimientos 
-                ORDER BY date;'''
-
-    movimientos = dbmanager.consultaSQL(consulta)
-    return render_template("index.html", items=movimientos)
+    return render_template("index.html")
 
 
 @app.route("/api/v1/movimientos")
@@ -52,7 +42,7 @@ def lista_movimientos():
         return jsonify(error), 400
 
 
-@app.route("/api/v1/movimiento/<int:id>", methods=["GET"])
+@app.route("/api/v1/movimiento/<int:id>", methods=['GET'])
 def movimiento(id):
     try:
         consulta_movimiento = '''SELECT id, date, time, moneda_from, cantidad_from, moneda_to, cantidad_to
@@ -78,12 +68,12 @@ def movimiento(id):
         return jsonify(error), 400
 
 
-@app.route("/api/v1/movimiento", methods=["POST"])
+@app.route("/api/v1/movimiento", methods=['POST'])
 def nuevo_movimiento():
 
-    if request.json["message"] == "compra":
+    if request.json["message"] == "convert":
 
-        if request.json["moneda_from"] != "EUR":
+        if request.json["moneda_from"] != 'EUR':
             balance = comprobar_balance(request.json["cantidad_from"])
 
             if balance >= float(request.json["cantidad_from"]):
@@ -133,9 +123,9 @@ def comprobar_balance(moneda):
 
 def request_Api():
     try:
-        request_api = float(request_api.consulta_tasa(request.json["moneda_from"], request.json["moneda_to"]))
+        request_api = float(consulta_api.consulta_tasa(request.json["moneda_from"], request.json["moneda_to"]))
         respuesta = {
-            "status": "succes",
+            "status": "success",
             "cantidad_to": request_api * float(request.json["cantidad_from"]),
             "precio_unitario": request_api
         }
@@ -153,7 +143,7 @@ def request_Api():
 def status_inversion():
 
     consulta = '''SELECT * 
-                FROM investments 
+                FROM movimientos 
                 ORDER BY date;'''
     try:
         criptos = dbmanager.obtenerMonedas(consulta)

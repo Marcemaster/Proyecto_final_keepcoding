@@ -1,5 +1,5 @@
 const listaMovimientosRequest = new XMLHttpRequest();
-const cambiaMovimientosRequest = new XMLHttpRequest();
+const nuevoMovimientoRequest = new XMLHttpRequest();
 const calcularBalanceRequest = new XMLHttpRequest();
 const respuestaEstadoRequest = new XMLHttpRequest();
 
@@ -54,8 +54,10 @@ function cargaMovimientos() {
             const sin_movimientos = document.querySelector("#sin-movimientos");
 
             const mensaje_mov = `<p>Aquí aparecerán los movimientos. Realice la primera compra</p>`;
-            mensaje_mov.innerHTML = mensaje_mov
+            sin_movimientos.innerHTML = mensaje_mov
         }
+    } else {
+        mensajes_error(response, "Error al acceder a la base de datos")
     }
 }
 
@@ -65,14 +67,15 @@ function calculaTasa() {
     const mensaje_error = document.querySelector("#mensaje-error");
     const errorHTML = "";
     mensaje_error.innerHTML = errorHTML;
+    
     const response = JSON.parse(this.responseText);
 
     if (this.readyState === 4 && this.status === 201) {
         const cantidad_to = document.getElementById("cantidad_to");
-        cantidad_to.value = response["cantidad_to"]
+        cantidad_to.value = response["cantidad_to"];
 
-        const precio_unitario = document.getElementById("precio_unitario")
-        precio_unitario.value = response["precio_unitario"]
+        const precio_unitario = document.getElementById("precio_unitario");
+        precio_unitario.value = response["precio_unitario"];
 
         // Evitamos que se pueda alterar el formulario después de calcular la tasa.
 
@@ -84,7 +87,7 @@ function calculaTasa() {
         moneda_to.setAttribute("disabled", true);
 
     } else {
-        mensaje_error(response, "Error en la Request a la API")
+        mensajes_error(response, "Error en la Request a la API")
     }
 }
 
@@ -169,8 +172,8 @@ function validaInputs(ev) {
     ev.preventDefault();
     
     const moneda_from = document.getElementById("moneda_from")
-    const moneda_to = document.getElementById("moneda_to")
     const cantidad_from = document.getElementById("cantidad_from")
+    const moneda_to = document.getElementById("moneda_to")
     
     if ( 
         cantidad_from.value == ""
@@ -182,35 +185,58 @@ function validaInputs(ev) {
             compruebaBalance();
         } 
         
-    }
+}
     
     
 function compruebaBalance() {
-        
-        
-    }
+    const moneda_from = document.getElementById("moneda_from").value
+    const cantidad_from = document.getElementById("cantidad_from").value
+    const moneda_to = document.getElementById("moneda_to").value
     
+    const datos_balance = {
+        message: "convert",
+        moneda_from: moneda_from,
+        cantidad_from: cantidad_from,
+        moneda_to: moneda_to
+    };
 
+    const url = `${root_host}movimiento`;
+    calcularBalanceRequest.open("POST", url, true);
+    calcularBalanceRequest.setRequestHeader(
+        "Content-Type",
+        "application/json"
+    );
+
+    calcularBalanceRequest.send(JSON.stringify(datos_balance));
+    calcularBalanceRequest.onload = calculaTasa();
+}
+    
     // Nuevos movimientos
     
-    function altaMovimiento(ev) {
-        ev.preventDefault()
-        
-        const date = "17/10/2021"//today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-        const time = "20:29:10" // Date.getHours() + ":" + Date.getMinutes() + ":" + Date.getSeconds();
-        const moneda_from = document.querySelector("#moneda_from").value
-        const cantidad_from = document.querySelector("#cantidad_from").value
-        const moneda_to = document.querySelector("#moneda_to").value
-        const cantidad_to = 100000//calculaTasa // ¿Cómo se conecta esto con la llamada a la API de coinmarketcap? 
-        // Primero hay que rellenar los datos en el form a través de otra función
-
-    json_movimiento = {"date":date, "time":time, "moneda_from":moneda_from, "cantidad_from":cantidad_from, "moneda_to":moneda_to, "cantidad_to":cantidad_to}
-
-    cambiaMovimientosRequest.open("POST", "/api/v1/movimiento", true)
-    cambiaMovimientosRequest.setRequestHeader("Content-Type", "application/json")
-    cambiaMovimientosRequest.onload = respuestaAltaMovimiento
-    cambiaMovimientosRequest.send(JSON.stringify(json_movimiento))
-
+function altaMovimiento(ev) {
+    ev.preventDefault()
+    
+    let fecha_actual = new Date()
+    const moneda_from = document.getElementById("moneda_from").value
+    const cantidad_from = document.getElementById("cantidad_from").value
+    const moneda_to = document.getElementById("moneda_to").value
+    const cantidad_to = document.getElementById("cantidad_to").value
+    const nuevo_movimiento = {
+        message: "nuevo_movimiento",
+        date: obtener_fecha(fecha_actual),
+        time: obtener_hora(fecha_actual),
+        moneda_from: moneda_from,
+        cantidad_from: cantidad_from,
+        moneda_to: moneda_to,
+        cantidad_to: cantidad_to,
+    };
+    const url = `${root_host}movimientos`;
+    
+    nuevoMovimientoRequest.open("POST", url, true)
+    nuevoMovimientoRequest.setRequestHeader("Content-Type", "application/json")
+    nuevoMovimientoRequest.send(JSON.stringify(nuevo_movimiento))
+    nuevoMovimientoRequest.onload = respuestaAltaMovimiento
+    resetearFormulario();        
 }
 
 function respuestaAltaMovimiento() {
@@ -229,7 +255,6 @@ function respuestaAltaMovimiento() {
         mensajes_error(response, "Error al acceder a la base de datos");
     }
 }
-
 
 // FINAL Window onload.
 
