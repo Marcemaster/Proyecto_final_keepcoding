@@ -76,7 +76,7 @@ class consultaApi():
         headers = {'X-CoinAPI-Key': API_KEY}
         self.params = params
 
-        request = request.get((self.url).format(self.params), headers = headers)
+        request = requests.get((self.url).format(self.params), headers = headers)
         diccionario_valores_USD = request.json()
 
         diccionario_valores = {}
