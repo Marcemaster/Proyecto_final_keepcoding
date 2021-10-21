@@ -185,7 +185,7 @@ function validaInputs(ev) {
     }
     
     
-    function compruebaBalance() {
+function compruebaBalance() {
         
         
     }
@@ -215,14 +215,18 @@ function validaInputs(ev) {
 
 function respuestaAltaMovimiento() {
     if (this.readyState === 4 && this.status === 200) {
-        const url = `${root_host}movimientos`
-        listaMovimientosRequest.open("GET", url, true)
-        listaMovimientosRequest.onload = muestraMovimientos
-        listaMovimientosRequest.send()
+        const form = document.querySelector("#formulario-movimiento");
+        form.classList.add("inactivo");
+
+        const url = `${root_host}movimientos`;
+        listaMovimientosRequest.open("GET", url, true);
+        listaMovimientosRequest.onload = muestraMovimientos;
+        listaMovimientosRequest.send();
+
 
     } else {
         const response = JSON.parse(this.responseText);
-        errorMessage(response, "Error al acceder a la base de datos");
+        mensajes_error(response, "Error al acceder a la base de datos");
     }
 }
 
