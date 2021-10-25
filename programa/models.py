@@ -61,6 +61,7 @@ class DBManager():
                 monedas.append(mov["moneda_to"])
         return monedas
 
+
 class consultaApi():
     def __init__(self, url, params = []):
         self.url = url

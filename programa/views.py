@@ -32,7 +32,6 @@ def lista_movimientos():
             "movimientos": movimientos
         }
 
-        return jsonify(resultados)
 
     except Exception as error:
         error = {
@@ -40,6 +39,8 @@ def lista_movimientos():
             "message": str(error)
         }
         return jsonify(error), 400
+
+    return jsonify(resultados)
 
 
 @app.route("/api/v1/movimiento/<int:id>", methods=['GET'])
@@ -110,8 +111,8 @@ def nuevo_movimiento():
 
 
 def comprobar_balance(moneda):
-    comprobar_comprado = f''' SELECT IFNULL (SUM(cantidad_to), 0) FROM movimientos WHERE moneda_to = "{moneda}";'''
-    comprobar_vendido = f''' SELECT IFNULL (SUM(cantidad_from), 0) FROM movimientos WHERE moneda_from = "{moneda}";'''
+    comprobar_comprado = f''' SELECT IFNULL(SUM(cantidad_to), 0) FROM movimientos WHERE moneda_to = "{moneda}";'''
+    comprobar_vendido = f''' SELECT IFNULL(SUM(cantidad_from), 0) FROM movimientos WHERE moneda_from = "{moneda}";'''
 
     total_comprado = dbmanager.consultaBalanceSQL(comprobar_comprado)
     total_vendido = dbmanager.consultaBalanceSQL(comprobar_vendido)
@@ -122,12 +123,13 @@ def comprobar_balance(moneda):
 
 
 def request_Api():
+
     try:
-        request_api = float(consulta_api.consulta_tasa(request.json["moneda_from"], request.json["moneda_to"]))
+        request_coinapi = float(consulta_api.consulta_tasa(request.json["moneda_from"], request.json["moneda_to"]))
         respuesta = {
             "status": "success",
-            "cantidad_to": request_api * float(request.json["cantidad_from"]),
-            "precio_unitario": request_api
+            "cantidad_to": request_coinapi * float(request.json["cantidad_from"]),
+            "precio_unitario": request_coinapi
         }
 
         return jsonify(respuesta), 201
@@ -142,32 +144,33 @@ def request_Api():
 @app.route("/api/v1/status")
 def status_inversion():
 
-    consulta = '''SELECT * 
-                FROM movimientos 
-                ORDER BY date;'''
     try:
-        criptos = dbmanager.obtenerMonedas(consulta)
+
+        comprobar_balance_from = ''' SELECT SUM (cantidad_from) FROM movimientos WHERE moneda_from = "EUR";'''
+        inversion_from = dbmanager.consultaBalanceSQL(comprobar_balance_from)
+
+        comprobar_balance_to =''' SELECT SUM (cantidad_to) FROM movimientos WHERE moneda_to = "EUR";'''
+        inversion_to = dbmanager.consultaBalanceSQL(comprobar_balance_to)
+
+
+
+        criptos = dbmanager.obtenerMonedas('''SELECT * FROM movimientos ORDER BY date;''')
         monedas = "EUR,"
 
-        for moneda in criptos:
-            monedas += f"{moneda},"
+        for m in criptos:
+            monedas += f"{m},"
         
         valores_dolares = consulta_estado_api.consulta_status(monedas)
-
         total_dolares = 0
+
         for moneda in criptos:
             balance = comprobar_balance(moneda)
             total_dolares_moneda = balance * valores_dolares[f"{moneda}"]
             total_dolares += total_dolares_moneda
 
+
+        inversion = inversion_from - inversion_to
         total = total_dolares / total_dolares_moneda["EUR"]
-
-        consulta_balance = '''SELECT SUM
-                            (cantidad_from) FROM movimientos
-                            WHERE moneda_from = "EUR";'''
-
-        inversion = dbmanager.consultaBalanceSQL(consulta_balance)
-
         resultado = total - inversion
 
         respuesta = {
@@ -182,5 +185,4 @@ def status_inversion():
             "message": str(error)
         }
         return jsonify(error), 400
-    
 
