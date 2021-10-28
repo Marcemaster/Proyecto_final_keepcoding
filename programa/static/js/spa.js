@@ -47,7 +47,6 @@ function cargaMovimientos() {
     }
 }
 
-
 // Estado 
 
 function cargarEstado() {
@@ -85,18 +84,14 @@ function hazVisibleForm(ev) {
 
     const form = document.querySelector("#formulario-movimiento")
     form.classList.remove("inactivo")
-
-    const aceptar = document.getElementById("btn-enviar")
-    aceptar.classList.add("inactivo")
-
 }
 
 function resetearFormulario() {
     document.getElementById("moneda_from").value = "EUR";
     document.getElementById("cantidad_from").value = "";
     document.getElementById("moneda_to").value = "BTC";
-    document.getElementById("cantidad_to").value = "EUR";
-    document.getElementById("precio_unitario").value = "EUR";
+    document.getElementById("cantidad_to").value = "";
+    document.getElementById("precio_unitario").value = "";
 
     const moneda_from = document.getElementById("moneda_from");
     moneda_from.removeAttribute("inactivo")
@@ -140,9 +135,6 @@ function validaInputs(ev) {
         } 
         
 }
-    
-    
-
     
     // Nuevos movimientos
 
@@ -194,6 +186,7 @@ function compruebaBalance() {
     const moneda_from = document.getElementById("moneda_from").value
     const cantidad_from = document.getElementById("cantidad_from").value
     const moneda_to = document.getElementById("moneda_to").value
+
     
     const datos_balance = {
         message: "convert",
@@ -201,7 +194,7 @@ function compruebaBalance() {
         cantidad_from: cantidad_from,
         moneda_to: moneda_to
     };
-
+    console.log(datos_balance)
     const url = `${root_host}movimiento`;
     calcularBalanceRequest.open("POST", url, true);
     calcularBalanceRequest.setRequestHeader(
@@ -211,6 +204,7 @@ function compruebaBalance() {
 
     calcularBalanceRequest.send(JSON.stringify(datos_balance));
     calcularBalanceRequest.onload = calculaTasa;
+    resetearFormulario();
 }
 
 function altaMovimiento(ev) {

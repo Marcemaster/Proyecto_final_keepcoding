@@ -71,11 +71,11 @@ def movimiento(id):
 
 @app.route("/api/v1/movimiento", methods=['POST'])
 def nuevo_movimiento():
-
+    print(request.json)
     if request.json["message"] == "convert":
 
         if request.json["moneda_from"] != 'EUR':
-            balance = comprobar_balance(request.json["cantidad_from"])
+            balance = comprobar_balance(request.json["moneda_from"])
 
             if balance >= float(request.json["cantidad_from"]):
                 return request_Api()
@@ -132,6 +132,7 @@ def request_Api():
             "precio_unitario": request_coinapi
         }
 
+        print(respuesta)
         return jsonify(respuesta), 201
 
     except Exception as error:
