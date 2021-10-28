@@ -47,6 +47,9 @@ function cargaMovimientos() {
     }
 }
 
+
+// Estado 
+
 function cargarEstado() {
     const response = JSON.parse(this.responseText)
 

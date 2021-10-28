@@ -43,7 +43,7 @@ def lista_movimientos():
     return jsonify(resultados)
 
 
-@app.route("/api/v1/movimiento/<int:id>", methods=['GET'])
+@app.route("/api/v1/movimientos/<int:id>", methods=['GET'])
 def movimiento(id):
     try:
         consulta_movimiento = '''SELECT id, date, time, moneda_from, cantidad_from, moneda_to, cantidad_to
