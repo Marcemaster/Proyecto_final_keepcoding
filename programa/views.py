@@ -167,6 +167,7 @@ def status_inversion():
 
 
         inversion = inversion_from - inversion_to
+        print(valores_dolares["EUR"])
         total = total_dolares / valores_dolares["EUR"]
         resultado = total - inversion
 
