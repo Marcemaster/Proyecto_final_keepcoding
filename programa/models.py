@@ -67,7 +67,7 @@ class consultaApi():
         self.url = url
 
     def consulta_tasa(self, moneda_from, moneda_to):
-        headers = {'X-CoinAPI-Key"': API_KEY}
+        headers = {'X-CoinAPI-Key': API_KEY}
         self.moneda_from = moneda_from
         self.moneda_to = moneda_to
         request = requests.get((self.url).format(self.moneda_from, self.moneda_to), headers = headers)

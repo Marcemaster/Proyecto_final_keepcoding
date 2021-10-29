@@ -21,6 +21,8 @@ function cargaMovimientos() {
     if (this.readyState === 4 && this.status === 200) {
         const movimientos = response.movimientos;
         if (movimientos.length != 0) {
+            const sin_movimientos = document.querySelector("#sin-movimientos");
+            sin_movimientos.remove()
 
             const tabla = document.querySelector("#tabla-datos")
             let innerHTML = ""
@@ -39,7 +41,7 @@ function cargaMovimientos() {
         } else {
             const sin_movimientos = document.querySelector("#sin-movimientos");
 
-            const mensaje_mov = `<p>Aquí aparecerán los movimientos. Realice la primera compra</p>`;
+            const mensaje_mov = `<p>Realice la primera compra</p>`;
             sin_movimientos.innerHTML = mensaje_mov
         }
     } else {
@@ -51,11 +53,12 @@ function cargaMovimientos() {
 
 function cargarEstado() {
     const response = JSON.parse(this.responseText)
+    console.log(response)
 
     if (this.readyState === 4 && this.status === 200) {
         const valores = response.data;
-
-        const tabla_estado = document.getElementById("tabla_estado")
+        console.log(valores);
+        const tabla_estado = document.getElementById("tabla_estado");
         const inversionHTML = `<td>${valores["inversion"].toFixed(2)}</td>`;
         const totalHTML = `<td>${valores["total"].toFixed(2)}</td>`;
         const resultadoHTML = `<td>${valores["resultado"].toFixed(2)}</td>`;
@@ -168,15 +171,6 @@ function calculaTasa() {
         const precio_unitario = document.getElementById("precio_unitario");
         precio_unitario.value = response["precio_unitario"].toFixed(4);
 
-        // Evitamos que se pueda alterar el formulario después de calcular la tasa.
-
-        const moneda_from = document.getElementById("moneda_from");
-        moneda_from.setAttribute("disabled", true);
-        const cantidad_from = document.getElementById("cantidad_from");
-        cantidad_from.setAttribute("disabled", true);
-        const moneda_to = document.getElementById("moneda_to");
-        moneda_to.setAttribute("disabled", true);
-
     } else {
         mensajes_error(response, "Error en la Request a la API")
     }
@@ -204,7 +198,6 @@ function compruebaBalance() {
 
     calcularBalanceRequest.send(JSON.stringify(datos_balance));
     calcularBalanceRequest.onload = calculaTasa;
-    resetearFormulario();
 }
 
 function altaMovimiento(ev) {
@@ -230,7 +223,8 @@ function altaMovimiento(ev) {
     nuevoMovimientoRequest.setRequestHeader("Content-Type", "application/json")
     nuevoMovimientoRequest.send(JSON.stringify(nuevo_movimiento))
     nuevoMovimientoRequest.onload = respuestaAltaMovimiento
-    resetearFormulario();        
+    resetearFormulario();
+    respuestaEstado();
 }
 
 // FINAL Window onload.
@@ -241,12 +235,17 @@ window.onload = function() {
     listaMovimientosRequest.onload = cargaMovimientos;
     listaMovimientosRequest.send();
 
-    const btnNuevo = document.querySelector("#btn-nuevo")
-    btnNuevo.addEventListener("click", hazVisibleForm)
+    const url_s = `${root_host}status`
+    respuestaEstadoRequest.open("GET",url_s, true);
+    respuestaEstadoRequest.onload = cargarEstado;
+    respuestaEstadoRequest.send();
 
-    const btnCalc = document.querySelector("#btn-calcular")
-    btnCalc.addEventListener("click", validaInputs)
+    const btnNuevo = document.querySelector("#btn-nuevo");
+    btnNuevo.addEventListener("click", hazVisibleForm);
 
-    const btnEnviar = document.querySelector("#btn-enviar")
-    btnEnviar.addEventListener("click", altaMovimiento)
+    const btnCalc = document.querySelector("#btn-calcular");
+    btnCalc.addEventListener("click", validaInputs);
+
+    const btnEnviar = document.querySelector("#btn-enviar");
+    btnEnviar.addEventListener("click", altaMovimiento);
 }

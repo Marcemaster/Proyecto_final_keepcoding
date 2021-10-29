@@ -71,7 +71,6 @@ def movimiento(id):
 
 @app.route("/api/v1/movimiento", methods=['POST'])
 def nuevo_movimiento():
-    print(request.json)
     if request.json["message"] == "convert":
 
         if request.json["moneda_from"] != 'EUR':
@@ -131,8 +130,6 @@ def request_Api():
             "cantidad_to": request_coinapi * float(request.json["cantidad_from"]),
             "precio_unitario": request_coinapi
         }
-
-        print(respuesta)
         return jsonify(respuesta), 201
 
     except Exception as error:
@@ -145,15 +142,14 @@ def request_Api():
 @app.route("/api/v1/status")
 def status_inversion():
 
+
     try:
 
-        comprobar_balance_from = ''' SELECT SUM (cantidad_from) FROM movimientos WHERE moneda_from = "EUR";'''
+        comprobar_balance_from = ''' SELECT IFNULL(SUM (cantidad_from), 0) FROM movimientos WHERE moneda_from = "EUR";'''
         inversion_from = dbmanager.consultaBalanceSQL(comprobar_balance_from)
 
-        comprobar_balance_to =''' SELECT SUM (cantidad_to) FROM movimientos WHERE moneda_to = "EUR";'''
+        comprobar_balance_to =''' SELECT IFNULL(SUM (cantidad_to),0) FROM movimientos WHERE moneda_to = "EUR";'''
         inversion_to = dbmanager.consultaBalanceSQL(comprobar_balance_to)
-
-
 
         criptos = dbmanager.obtenerMonedas('''SELECT * FROM movimientos ORDER BY date;''')
         monedas = "EUR,"
@@ -171,12 +167,12 @@ def status_inversion():
 
 
         inversion = inversion_from - inversion_to
-        total = total_dolares / total_dolares_moneda["EUR"]
+        total = total_dolares / valores_dolares["EUR"]
         resultado = total - inversion
 
         respuesta = {
             "status":"success",
-            "data": {"inversion": inversion, "total": total, "resultado":resultado,}
+            "data": {"inversion": inversion, "total": total, "resultado":resultado}
         }
         return jsonify(respuesta), 200
 

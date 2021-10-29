@@ -17,7 +17,6 @@
             <h1>Lista de movimientos</h1>
             <article id="tabla-registros">
                 <button id="btn-nuevo">Nuevo</button>
-                <div class="sin-movimientos" id="sin-movimientos"></div>
                 <table class="paper">
                     <thead>
                         <tr>
@@ -28,6 +27,7 @@
                             <th>Moneda</th>
                             <th>Cantidad</th>
                         </tr>
+                        <tr class="sin-movimientos" id="sin-movimientos"></tr>
                     </thead>
                     <tbody class="tabla-datos" id="tabla-datos">
                         <!-- aquí van a ir los datos desde JS-->
@@ -100,7 +100,7 @@
                         <th>Total €</th>
                         <th>Resultado €</th>
                     </thead>
-                    <tbody id="tabla-estado">
+                    <tbody id="tabla_estado">
                         <!-- Status a través de js -->
                     </tbody>
                 </table>
