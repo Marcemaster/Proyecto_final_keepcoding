@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>myCRYPTO | {% block titulo_pagina %} {% endblock %}</title>
+        <title>myCRYPTO</title>
         <link rel="stylesheet" href="/static/css/flat-remix.css">
         <link rel="stylesheet" href="/static/css/styles.css">
         <script src="/static/js/spa.js"></script>
@@ -16,7 +16,6 @@
         <section class="contenedor">
             <h1>Lista de movimientos</h1>
             <article id="tabla-registros">
-                <button id="btn-nuevo">Nuevo</button>
                 <table class="paper">
                     <thead>
                         <tr>
@@ -32,8 +31,9 @@
                     <tbody class="tabla-datos" id="tabla-datos">
                         <!-- aquí van a ir los datos desde JS-->
                     </tbody>
+                </table>
+                <button id="btn-nuevo">Nuevo</button>
             </article>
-            </table>
             <article id="formulario">
                 <form class="inactivo" id="formulario-movimiento" method="POST">
                     <div class="campo-formulario">

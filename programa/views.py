@@ -141,10 +141,7 @@ def request_Api():
 
 @app.route("/api/v1/status")
 def status_inversion():
-
-
     try:
-
         comprobar_balance_from = ''' SELECT IFNULL(SUM (cantidad_from), 0) FROM movimientos WHERE moneda_from = "EUR";'''
         inversion_from = dbmanager.consultaBalanceSQL(comprobar_balance_from)
 
@@ -154,26 +151,33 @@ def status_inversion():
         criptos = dbmanager.obtenerMonedas('''SELECT * FROM movimientos ORDER BY date;''')
         monedas = "EUR,"
 
-        for m in criptos:
-            monedas += f"{m},"
+        if criptos != []:
+            for m in criptos:
+                monedas += f"{m},"
+            
+            valores_dolares = consulta_estado_api.consulta_status(monedas)
+            total_dolares = 0
+
+            for moneda in criptos:
+                balance = comprobar_balance(moneda)
+                total_dolares_moneda = balance * valores_dolares[f"{moneda}"]
+                total_dolares += total_dolares_moneda
         
-        valores_dolares = consulta_estado_api.consulta_status(monedas)
-        total_dolares = 0
+            inversion = inversion_from - inversion_to
+            print(valores_dolares["EUR"])
+            total = total_dolares / valores_dolares["EUR"]
+            resultado = total - inversion
 
-        for moneda in criptos:
-            balance = comprobar_balance(moneda)
-            total_dolares_moneda = balance * valores_dolares[f"{moneda}"]
-            total_dolares += total_dolares_moneda
+        else:
+            inversion = 0
+            total = 0
+            resultado = 0
 
 
-        inversion = inversion_from - inversion_to
-        print(valores_dolares["EUR"])
-        total = total_dolares / valores_dolares["EUR"]
-        resultado = total - inversion
-
+        # LO ÚLTIMO QUE HE HECHO HA SIDO IGUALAR LA INVERSIÓN A INVERSION_FROM EN LUGAR DE INVERSIÓN PARA QUE NO SE QUEDE EN NEGATIVO CUANDO TIENES BENEFICIO
         respuesta = {
             "status":"success",
-            "data": {"inversion": inversion, "total": total, "resultado":resultado}
+            "data": {"inversion": inversion_from, "total": total, "resultado":resultado}
         }
         return jsonify(respuesta), 200
 
