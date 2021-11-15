@@ -13,7 +13,6 @@ url_status = 'https://rest.coinapi.io/v1/assets/{}'
 consulta_estado_api = consultaApi(url_status)
 
 
-
 @app.route("/")
 def inicio():
     return render_template("index.html")
@@ -163,8 +162,7 @@ def status_inversion():
                 total_dolares_moneda = balance * valores_dolares[f"{moneda}"]
                 total_dolares += total_dolares_moneda
         
-            inversion = inversion_from - inversion_to
-            print(valores_dolares["EUR"])
+            inversion = inversion_from - inversion_to 
             total = total_dolares / valores_dolares["EUR"]
             resultado = total - inversion
 
@@ -173,8 +171,6 @@ def status_inversion():
             total = 0
             resultado = 0
 
-
-        # LO ÚLTIMO QUE HE HECHO HA SIDO IGUALAR LA INVERSIÓN A INVERSION_FROM EN LUGAR DE INVERSIÓN PARA QUE NO SE QUEDE EN NEGATIVO CUANDO TIENES BENEFICIO
         respuesta = {
             "status":"success",
             "data": {"inversion": inversion_from, "total": total, "resultado":resultado}
@@ -187,4 +183,3 @@ def status_inversion():
             "message": str(error)
         }
         return jsonify(error), 400
-

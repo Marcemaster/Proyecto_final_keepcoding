@@ -26,3 +26,9 @@ label {
     display: none;
 }
 
+
+.estado-inversion {
+    display: flexbox;
+    justify-content: space-evenly;
+    padding: 1rem;
+}

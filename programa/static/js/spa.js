@@ -21,8 +21,13 @@ function cargaMovimientos() {
     if (this.readyState === 4 && this.status === 200) {
         const movimientos = response.movimientos;
         if (movimientos.length != 0) {
-            const sin_movimientos = document.querySelector("#sin-movimientos");
-            sin_movimientos.remove()
+            
+            const sin_movimientos = document.getElementById("sin-movimientos");
+            if (sin_movimientos != null) {
+                sin_movimientos.remove()
+            } else { //pass 
+              }
+
 
             const tabla = document.querySelector("#tabla-datos")
             let innerHTML = ""
@@ -53,11 +58,9 @@ function cargaMovimientos() {
 
 function cargarEstado() {
     const response = JSON.parse(this.responseText)
-    console.log(response)
 
     if (this.readyState === 4 && this.status === 200) {
         const valores = response.data;
-        console.log(valores);
         const tabla_estado = document.getElementById("tabla_estado");
         const inversionHTML = `<td>${valores["inversion"].toFixed(2)}</td>`;
         const totalHTML = `<td>${valores["total"].toFixed(2)}</td>`;
@@ -107,7 +110,7 @@ function resetearFormulario() {
 }
 
 
-// Funciones para conseguir la fecha 
+// Funciones para conseguir la fecha y hora 
 
 function obtener_fecha(date) {
     return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
@@ -139,7 +142,7 @@ function validaInputs(ev) {
         
 }
     
-    // Nuevos movimientos
+// Nuevos movimientos
 
 function respuestaAltaMovimiento() {
     if (this.readyState === 4 && this.status === 200) {
@@ -188,7 +191,6 @@ function compruebaBalance() {
         cantidad_from: cantidad_from,
         moneda_to: moneda_to
     };
-    console.log(datos_balance)
     const url = `${root_host}movimiento`;
     calcularBalanceRequest.open("POST", url, true);
     calcularBalanceRequest.setRequestHeader(
@@ -225,9 +227,9 @@ function altaMovimiento(ev) {
     nuevoMovimientoRequest.onload = respuestaAltaMovimiento
     resetearFormulario();
     respuestaEstado();
+    respuestaAltaMovimiento();
 }
 
-// FINAL Window onload.
 
 window.onload = function() {
     const url = `${root_host}movimientos`;
